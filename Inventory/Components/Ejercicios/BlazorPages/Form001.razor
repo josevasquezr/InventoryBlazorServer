@@ -30,11 +30,19 @@
 </div>
 
 @code{
+    [Parameter]
+    public string Message { get; set; }
+
     string nombres = "";
     string apellidos = "";
     string nombreCompleto = "";
 
     private void ChangeText(){
         nombreCompleto = $"{nombres} {apellidos}";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        nombreCompleto = Message;
     }
 }
