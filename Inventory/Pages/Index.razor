@@ -2,8 +2,43 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Primer ejercicio</h1>
 
-Welcome to your new app.
+<br />
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<h2>Usuario: </h2>
+
+<br />
+
+<div>
+    <div>
+        <label>Nombres: </label>
+        <input type="text" @bind-value="@nombres"/>
+    </div>
+    <br />
+    <div>
+        <label>Apellidos: </label>
+        <input type="text" @bind-value="@apellidos"/>
+    </div>
+    <br />
+    <div>
+        <input type="button" value="Click" @onclick="ChangeText"/>
+    </div>
+</div>
+
+<br />
+
+<div>
+    <label>Nombre Completo: </label>
+    <div>@nombreCompleto</div>
+</div>
+
+@code{
+    string nombres = "";
+    string apellidos = "";
+    string nombreCompleto = "";
+
+    private void ChangeText(){
+        nombreCompleto = $"{nombres} {apellidos}";
+    }
+}
