@@ -8,7 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
 builder.Services.AddDbContextFactory<InventoryContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"))
+);
+
+builder.Services.AddDbContext<InventoryContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"))
 );
 
