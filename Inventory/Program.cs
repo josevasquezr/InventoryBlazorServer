@@ -14,9 +14,11 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddDbContext<InventoryContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"))
 );
-
 builder.Services.AddScoped<ICategoryBusiness, CategoryBusiness>();
 builder.Services.AddScoped<IInputOutputBusiness, InputOutputBusiness>();
+builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
+builder.Services.AddScoped<IStorageBusiness, StorageBusiness>();
+builder.Services.AddScoped<IWarehouseBusiness, WarehouseBusiness>();
 
 var app = builder.Build();
 

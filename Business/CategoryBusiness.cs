@@ -28,7 +28,7 @@ namespace Business
         {
             using (_context)
             {
-                _context.Add(category);
+                _context.Categories.Add(category);
                 _context.SaveChanges();
             }
         }
@@ -49,7 +49,7 @@ namespace Business
         {
             using (_context)
             {
-                _context.Update(category);
+                _context.Categories.Update(category);
                 _context.SaveChanges();
             }
         }

@@ -21,7 +21,7 @@ namespace Business
         {
             using (_context)
             {
-                _context.Add(inOut);
+                _context.InOuts.Add(inOut);
                 _context.SaveChanges();
             }
         }
@@ -49,7 +49,7 @@ namespace Business
         {
             using (_context)
             {
-                _context.Update(inOut);
+                _context.InOuts.Update(inOut);
                 _context.SaveChanges();
             }
         }
