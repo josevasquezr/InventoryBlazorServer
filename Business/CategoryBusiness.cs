@@ -18,40 +18,28 @@ namespace Business
 
         public List<CategoryEntity> CategoryList()
         {
-            using (_context)
-            {
-                return _context.Categories.ToList();
-            }
+            return _context.Categories.ToList();
         }
 
         public void CreateCategory(CategoryEntity category)
         {
-            using (_context)
-            {
-                _context.Categories.Add(category);
-                _context.SaveChanges();
-            }
+            _context.Categories.Add(category);
+            _context.SaveChanges();
         }
 
         public CategoryEntity GetCategoryById(Guid id)
         {
-            using (_context)
-            {
-                IEnumerable<CategoryEntity> categories = from cat in _context.Categories
-                                                         where cat.CategoryId == id
-                                                         select cat;
+            IEnumerable<CategoryEntity> categories = from cat in _context.Categories
+                                                     where cat.CategoryId == id
+                                                     select cat;
 
-                return categories.FirstOrDefault();
-            }
+            return categories.FirstOrDefault();
         }
 
         public void UpdateCategory(CategoryEntity category)
         {
-            using (_context)
-            {
-                _context.Categories.Update(category);
-                _context.SaveChanges();
-            }
+            _context.Categories.Update(category);
+            _context.SaveChanges();
         }
     }
 

@@ -19,40 +19,28 @@ namespace Business
         
         public void CreateStorage(StorageEntity storage)
         {
-            using (_context)
-            {
-                _context.Storages.Add(storage);
-                _context.SaveChanges();
-            }
+            _context.Storages.Add(storage);
+            _context.SaveChanges();
         }
 
         public StorageEntity GetStorageById(Guid id)
         {
-            using (_context)
-            {
-                IEnumerable<StorageEntity> storages = from storage in _context.Storages
-                                                      where storage.StorageId == id
-                                                      select storage;
+            IEnumerable<StorageEntity> storages = from storage in _context.Storages
+                                                  where storage.StorageId == id
+                                                  select storage;
 
-                return storages.FirstOrDefault();
-            }
+            return storages.FirstOrDefault();
         }
 
         public List<StorageEntity> StorageList()
         {
-            using (_context)
-            {
-                return _context.Storages.ToList();
-            }
+            return _context.Storages.ToList();
         }
 
         public void UpdateStorage(StorageEntity storage)
         {
-            using (_context)
-            {
-                _context.Storages.Update(storage);
-                _context.SaveChanges();
-            }
+            _context.Storages.Update(storage);
+            _context.SaveChanges();
         }
     }
 

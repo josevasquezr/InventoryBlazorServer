@@ -19,39 +19,27 @@ namespace Business
     
         public void CreateInOut(InputOutputEntity inOut)
         {
-            using (_context)
-            {
-                _context.InOuts.Add(inOut);
-                _context.SaveChanges();
-            }
+            _context.InOuts.Add(inOut);
+            _context.SaveChanges();
         }
 
         public InputOutputEntity InOutsById(Guid id)
         {
-            using (_context)
-            {
-                IEnumerable<InputOutputEntity> inOuts = from io in _context.InOuts
-                                                        where io.InOutId == id
-                                                        select io;
-                return inOuts.FirstOrDefault();
-            }
+            IEnumerable<InputOutputEntity> inOuts = from io in _context.InOuts
+                                                    where io.InOutId == id
+                                                    select io;
+            return inOuts.FirstOrDefault();
         }
 
         public List<InputOutputEntity> InOutsList()
         {
-            using (_context)
-            {
-                return _context.InOuts.ToList();
-            }
+            return _context.InOuts.ToList();
         }
 
         public void UpdateInOut(InputOutputEntity inOut)
         {
-            using (_context)
-            {
-                _context.InOuts.Update(inOut);
-                _context.SaveChanges();
-            }
+            _context.InOuts.Update(inOut);
+            _context.SaveChanges();
         }
     }
 

@@ -19,40 +19,28 @@ namespace Business
 
         public void CreateWarehouse(WarehouseEntity warehouse)
         {
-            using (_context)
-            {
-                _context.Warehouses.Add(warehouse);
-                _context.SaveChanges();
-            }
+            _context.Warehouses.Add(warehouse);
+            _context.SaveChanges();
         }
 
         public WarehouseEntity GetWarehouseById(Guid id)
         {
-            using (_context)
-            {
-                IEnumerable<WarehouseEntity> warehouses = from warehouse in _context.Warehouses
-                                                          where warehouse.WarehouseId == id
-                                                          select warehouse;
+            IEnumerable<WarehouseEntity> warehouses = from warehouse in _context.Warehouses
+                                                      where warehouse.WarehouseId == id
+                                                      select warehouse;
 
-                return warehouses.FirstOrDefault();
-            }
+            return warehouses.FirstOrDefault();
         }
 
         public void UpdateWarehouse(WarehouseEntity warehouse)
         {
-            using (_context)
-            {
-                _context.Warehouses.Update(warehouse);
-                _context.SaveChanges();
-            }
+            _context.Warehouses.Update(warehouse);
+            _context.SaveChanges();
         }
 
         public List<WarehouseEntity> WarehouseList()
         {
-            using (_context)
-            {
-                return _context.Warehouses.ToList();
-            }
+            return _context.Warehouses.ToList();
         }
     }
 

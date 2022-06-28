@@ -19,40 +19,28 @@ namespace Business
 
         public void CreateProduct(ProductEntity product)
         {
-            using (_context)
-            {
-                _context.Products.Add(product);
-                _context.SaveChanges();
-            }
+            _context.Products.Add(product);
+            _context.SaveChanges();
         }
 
         public ProductEntity GetProductById(Guid id)
         {
-            using (_context)
-            {
-                IEnumerable<ProductEntity> products = from product in _context.Products
-                                                      where product.ProductId == id
-                                                      select product;
+            IEnumerable<ProductEntity> products = from product in _context.Products
+                                                  where product.ProductId == id
+                                                  select product;
 
-                return products.FirstOrDefault();
-            }
+            return products.FirstOrDefault();
         }
 
         public List<ProductEntity> ProductList()
         {
-            using (_context)
-            {
-                return _context.Products.ToList();
-            }
+            return _context.Products.ToList();
         }
 
         public void UpdateProduct(ProductEntity product)
         {
-            using (_context)
-            {
-                _context.Products.Update(product);
-                _context.SaveChanges();
-            }
+            _context.Products.Update(product);
+            _context.SaveChanges();
         }
     }
 
