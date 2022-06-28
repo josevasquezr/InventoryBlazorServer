@@ -1,3 +1,4 @@
+using Business;
 using DataAccess;
 using Inventory.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,13 +10,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
-builder.Services.AddDbContextFactory<InventoryContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"))
-);
-
+// Inyeccion de dependencias
 builder.Services.AddDbContext<InventoryContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"))
 );
+
+builder.Services.AddScoped<ICategoryBusiness, CategoryBusiness>();
+builder.Services.AddScoped<IInputOutputBusiness, InputOutputBusiness>();
 
 var app = builder.Build();
 
