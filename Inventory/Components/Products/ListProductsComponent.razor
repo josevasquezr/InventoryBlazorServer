@@ -1,6 +1,22 @@
 ﻿@using Entities
 @using Business
 @inject IProductBusiness _productBusiness
+@inject ICategoryBusiness _categoryBusiness
+
+<hr />
+
+<div class="form-group">
+    <label class="form-label">Filtro: </label>
+    <select class="form-control" @onchange="CategoryChanged">
+        <option>Seleccione categoria... </option>
+        @foreach (var category in categories)
+        {
+            <option value="@category.CategoryId">@category.CategoryName</option>
+        }
+    </select>
+</div>
+
+<hr />
 
 <table class="table caption-top">
     <caption>Lista de productos</caption>
@@ -14,7 +30,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var product in products)
+        @foreach (var product in productsFilter)
         {
             <tr>
                 <th scope="row">@(cantidad++)</th>
@@ -29,10 +45,35 @@
 
 @code {
     List<ProductEntity> products = new List<ProductEntity>();
-    int cantidad = 0;
+    List<ProductEntity> productsFilter = new List<ProductEntity>();
+    List<CategoryEntity> categories = new List<CategoryEntity>();
+
+    int cantidad = 1;
 
     protected override async Task OnInitializedAsync()
     {
         products = _productBusiness.ProductList();
+        productsFilter = products;
+        categories = _categoryBusiness.CategoryList()
+                                        .OrderBy(p => p.CategoryName)
+                                        .ToList();
+    }
+
+    private void CategoryChanged(ChangeEventArgs ev)
+    {
+        try
+        {
+            cantidad = 1;
+            Guid id = Guid.Parse(ev.Value.ToString());
+
+            productsFilter = (from product in products
+                              where product.CategoryId == id
+                              select product).OrderBy(p => p.ProductName)
+                                            .ToList();
+        }
+        catch (Exception)
+        {
+            productsFilter = products;
+        }
     }
 }
