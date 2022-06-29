@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business
 {
@@ -25,7 +26,7 @@ namespace Business
 
         public ProductEntity GetProductById(Guid id)
         {
-            IEnumerable<ProductEntity> products = from product in _context.Products
+            IEnumerable<ProductEntity> products = from product in _context.Products.Include(p => p.Category)
                                                   where product.ProductId == id
                                                   select product;
 
@@ -34,7 +35,10 @@ namespace Business
 
         public List<ProductEntity> ProductList()
         {
-            return _context.Products.ToList();
+            return _context.Products
+                .Include(p => p.Category)
+                .OrderBy(p => p.ProductName)
+                .ToList();
         }
 
         public void UpdateProduct(ProductEntity product)
