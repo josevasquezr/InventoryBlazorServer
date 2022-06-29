@@ -2,6 +2,7 @@
 @using Entities
 @inject IProductBusiness _productBusiness
 @inject ICategoryBusiness _categoryBusiness
+@inject NavigationManager _navManager
 
 <div>
     <EditForm Model="product">
@@ -48,6 +49,7 @@
     private void CreateProduct()
     {
         _productBusiness.CreateProduct(product);
+        _navManager.NavigateTo("product/list");
     }
 
 }
