@@ -27,6 +27,7 @@
             <th scope="col">Descripción</th>
             <th scope="col">Cantidad total</th>
             <th scope="col">Categoria</th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
@@ -38,6 +39,7 @@
                 <td>@product.ProductDescription</td>
                 <td>@product.TotalQuantity</td>
                 <td>@product.Category.CategoryName</td>
+                <td><a href="product/update/@product.ProductId">Editar</a></td>
             </tr>
         }
     </tbody>

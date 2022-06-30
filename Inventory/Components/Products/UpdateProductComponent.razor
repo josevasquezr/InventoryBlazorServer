@@ -1,0 +1,53 @@
+﻿@using Entities
+@using Business
+@inject IProductBusiness _productBusiness
+@inject ICategoryBusiness _categoryBusiness
+@inject NavigationManager _navManager
+
+<div>
+    <EditForm Model="product">
+        <div class="form-group">
+            <label class="form-label">Nombre: </label>
+            <InputText @bind-Value="product.ProductName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Descripción: </label>
+            <InputTextArea @bind-Value="product.ProductDescription" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Categoria: </label>
+            <InputSelect @bind-Value="product.CategoryId" class="form-control">
+                @foreach (var category in categories)
+                {
+                    <option value="@category.CategoryId">@category.CategoryName</option>
+                }
+            </InputSelect>
+        </div>
+
+        <br />
+
+        <input type="button" value="Editar Producto" @onclick="UpdateProduct" />
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public Guid id { get; set; }
+
+    ProductEntity product = new ProductEntity();
+    List<CategoryEntity> categories = new List<CategoryEntity>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = _categoryBusiness.CategoryList();
+        product = _productBusiness.GetProductById(id);
+    }
+
+    private void UpdateProduct()
+    {
+        _productBusiness.UpdateProduct(product);
+        _navManager.NavigateTo("product/list");
+    }
+}
