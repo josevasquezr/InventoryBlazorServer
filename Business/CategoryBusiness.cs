@@ -18,7 +18,7 @@ namespace Business
 
         public List<CategoryEntity> CategoryList()
         {
-            return _context.Categories.ToList();
+            return _context.Categories.OrderBy(p => p.CategoryName).ToList();
         }
 
         public void CreateCategory(CategoryEntity category)

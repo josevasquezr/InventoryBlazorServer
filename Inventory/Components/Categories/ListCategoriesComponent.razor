@@ -1,0 +1,51 @@
+﻿@using Entities
+@using Business
+@inject ICategoryBusiness _categoryBusiness
+
+<hr />
+<div>
+    <label class="form-label">Filtro</label>
+    <input type="text" @onchange="TextChangeFilter" class="form-control" />
+</div>
+<hr />
+
+<div>
+    <table class="table caption-top">
+        <caption>Lista de categorias</caption>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in categoriesFilter)
+            {
+                <tr>
+                    <th scope="row">@(cantidad++)</th>
+                    <td>@category.CategoryName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    List<CategoryEntity> categories = new List<CategoryEntity>();
+    List<CategoryEntity> categoriesFilter = new List<CategoryEntity>();
+    int cantidad = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = _categoryBusiness.CategoryList();
+        categoriesFilter = categories;
+    }
+
+    private void TextChangeFilter(ChangeEventArgs ev)
+    {
+        cantidad = 1;
+        categoriesFilter = (from category in categories
+                           where category.CategoryName.ToLower().Contains(ev.Value.ToString().ToLower())
+                           select category).ToList();
+    }
+}
