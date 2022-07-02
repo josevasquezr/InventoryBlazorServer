@@ -1,0 +1,35 @@
+﻿@using Entities
+@using Business
+@inject ICategoryBusiness _categoryBusiness
+@inject NavigationManager _navManager
+
+<div>
+    <EditForm Model="category">
+        <div class="form-group">
+            <label class="form-label">Nombre: </label>
+            <InputText class="form-control" @bind-Value="category.CategoryName" />
+        </div>
+
+        <br />
+
+        <input type="button" value="Editar Categoria" @onclick="UpdateCategory"/>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public Guid id { get; set;  }
+
+    CategoryEntity category = new CategoryEntity();
+
+    private void UpdateCategory()
+    {
+        _categoryBusiness.UpdateCategory(category);
+        _navManager.NavigateTo("category/list");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        category = _categoryBusiness.GetCategoryById(id);
+    }
+}

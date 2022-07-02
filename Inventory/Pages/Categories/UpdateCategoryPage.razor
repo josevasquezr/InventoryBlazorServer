@@ -1,0 +1,13 @@
+﻿@page "/category/update/{id}"
+
+<UpdateCategoryComponent id="@(Guid.Parse(id))" />
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        id = id;
+    }
+}
