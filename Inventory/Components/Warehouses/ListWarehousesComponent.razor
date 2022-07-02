@@ -1,0 +1,61 @@
+﻿@using Entities
+@using Business
+@inject IWarehouseBusiness _warehouseBusiness
+
+<hr />
+    <a href="warehouse/create">Crear Bodega</a>
+<hr />
+
+<div>
+    <div class="form-group">
+        <label class="form-label">Filtro: </label>
+        <input class="form-control" type="text" @onchange="changeFilterText" />
+    </div>
+</div>
+
+<hr />
+
+<div>
+    <table class="table caption-top">
+        <caption>Lista de bodegas</caption>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Dirección</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var warehouse in warehousesFilter)
+            {
+                <tr>
+                    <th scope="row">@(cantidad++)</th>
+                    <td>@warehouse.WarehouseName</td>
+                    <td>@warehouse.WarehouseAddress</td>
+                    <td><a href="warehouse/update/@warehouse.WarehouseId">Editar</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    List<WarehouseEntity> warehouses = new List<WarehouseEntity>();
+    List<WarehouseEntity> warehousesFilter = new List<WarehouseEntity>();
+    int cantidad = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        warehouses = _warehouseBusiness.WarehouseList();
+        warehousesFilter = warehouses;
+    }
+
+    private void changeFilterText(ChangeEventArgs ev)
+    {
+        cantidad = 1;
+        warehousesFilter = (from warehouse in warehouses
+                           where warehouse.WarehouseName.ToLower().Contains(ev.Value.ToString().ToLower())
+                           select warehouse).ToList();
+    }
+}

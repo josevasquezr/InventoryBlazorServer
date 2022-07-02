@@ -1,0 +1,13 @@
+﻿@page "/warehouse/update/{id}"
+
+<UpdateWarehouseComponent id="@(Guid.Parse(id))" />
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        id = id;
+    }
+}
