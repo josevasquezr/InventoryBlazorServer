@@ -1,0 +1,44 @@
+﻿@using Entities
+@using Business
+@inject IStorageBusiness _storageBusiness
+
+<hr />
+    <a href="storage/create">Crear almacenamiento</a>
+<hr />
+
+<div>
+    <table class="table caption-top">
+        <caption>Distribución de productos: </caption>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Producto</th>
+                <th scope="col">Bodega</th>
+                <th scope="col">Última actualización</th>
+                <th scope="col">Cantidad parcial</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var storage in storages)
+            {
+                <tr>
+                    <th scope="row">@(cantidad++)</th>
+                    <td>@storage.Product.ProductName</td>
+                    <td>@storage.Warehouse.WarehouseName</td>
+                    <td>@storage.LastUpdate</td>
+                    <td>@storage.PartialQuantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    List<StorageEntity> storages = new List<StorageEntity>();
+    int cantidad = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        storages = _storageBusiness.StorageList();
+    }
+}

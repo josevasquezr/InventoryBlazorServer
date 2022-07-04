@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business
 {
@@ -34,13 +35,24 @@ namespace Business
 
         public List<StorageEntity> StorageList()
         {
-            return _context.Storages.ToList();
+            return _context.Storages.Include(p => p.Product)
+                                    .Include(p => p.Warehouse)
+                                    .ToList();
         }
 
         public void UpdateStorage(StorageEntity storage)
         {
             _context.Storages.Update(storage);
             _context.SaveChanges();
+        }
+
+        bool IStorageBusiness.IsStorageExist(Guid idProduct, Guid idWarehouse)
+        {
+            IEnumerable<StorageEntity> storages = from storage in _context.Storages
+                                                  where storage.ProductId == idProduct && storage.WarehouseId == idWarehouse
+                                                  select storage;
+
+            return storages.Any();
         }
     }
 
@@ -50,5 +62,6 @@ namespace Business
         public StorageEntity GetStorageById(Guid id);
         public void CreateStorage(StorageEntity storage);
         public void UpdateStorage(StorageEntity storage);
+        public bool IsStorageExist(Guid idProduct, Guid idWarehouse);
     }
 }

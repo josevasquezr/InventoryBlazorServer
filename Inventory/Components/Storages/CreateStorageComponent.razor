@@ -1,0 +1,89 @@
+﻿@using Entities
+@using Business
+@inject IStorageBusiness _storageBusiness
+@inject IProductBusiness _productBusiness
+@inject IWarehouseBusiness _warehouseBusiness
+@inject NavigationManager _navManager
+
+<div>
+    <EditForm Model="storage">
+        <div class="form-group">
+            <label class="form-label">Producto: </label>
+            <InputSelect class="form-control" @bind-Value="storage.ProductId">
+                @foreach (var product in products)
+                {
+                    <option value="@product.ProductId">@product.ProductName</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Bodega: </label>
+            <InputSelect class="form-control" @bind-Value="storage.WarehouseId">
+                @foreach (var warehouse in warehouses)
+                {
+                    <option value="@warehouse.WarehouseId">@warehouse.WarehouseName</option>
+                }
+            </InputSelect>
+        </div>
+        <br />
+        <div class="form-group">
+            <input type="button" value="Crear almacenamiento" @onclick="CreateStorage" />
+        </div>
+    </EditForm>
+</div>
+
+<br />
+
+<div>
+    <span class="text-center alert-info">@message</span>
+</div>
+
+@code {
+    StorageEntity storage = new StorageEntity()
+        {
+            StorageId = Guid.NewGuid(),
+            LastUpdate = DateTime.Now,
+            PartialQuantity = 0
+        };
+
+    List<ProductEntity> products = new List<ProductEntity>();
+    List<WarehouseEntity> warehouses = new List<WarehouseEntity>();
+    string message = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = _productBusiness.ProductList();
+        warehouses = _warehouseBusiness.WarehouseList();
+    }
+
+    private void CreateStorage()
+    {
+        if (validate())
+        {
+            if (!_storageBusiness.IsStorageExist(storage.ProductId, storage.WarehouseId))
+            {
+                _storageBusiness.CreateStorage(storage);
+                message = "Almacenamiento creado exitosamente!";
+                _navManager.NavigateTo("storage/list");
+            }
+            else
+            {
+                message = "El almacenamiento ya existe!";
+            }
+        }
+        else
+        {
+            message = "Seleccione el producto y la bodega!";
+        }
+    }
+
+    private bool validate()
+    {
+        if(storage.ProductId == Guid.Empty || storage.WarehouseId == Guid.Empty)
+        {
+            return false;
+        }
+
+        return true;
+    }
+}
