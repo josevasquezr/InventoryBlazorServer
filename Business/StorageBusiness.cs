@@ -26,9 +26,9 @@ namespace Business
 
         public StorageEntity GetStorageById(Guid id)
         {
-            IEnumerable<StorageEntity> storages = from storage in _context.Storages
+            IEnumerable<StorageEntity> storages = (from storage in _context.Storages
                                                   where storage.StorageId == id
-                                                  select storage;
+                                                  select storage).Include(p => p.Product);
 
             return storages.FirstOrDefault();
         }

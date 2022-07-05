@@ -1,0 +1,138 @@
+﻿@using Entities
+@using Business
+@inject IInputOutputBusiness _inOutBusiness
+@inject IStorageBusiness _storageBusiness
+@inject IWarehouseBusiness _warehouseBusiness
+@inject IProductBusiness _productBusiness
+@inject NavigationManager _navManager
+
+<div>
+    <div class="form-group">
+        <label class="form-label">Bodega: </label>
+        <select class="form-control" @onchange="GetStoragesByWarehouseId">
+            <option>Seleccione bodega...</option>
+            @foreach (var warehouse in warehouses)
+            {
+                <option value="@warehouse.WarehouseId">@warehouse.WarehouseName</option>
+            }
+        </select>
+    </div>
+</div>
+
+<hr />
+
+<div>
+    <EditForm Model="inOut">
+        <div class="form-group">
+            <label class="form-label">Producto: </label>
+            <InputSelect class="form-control" @bind-Value="inOut.StorageId">
+                @foreach (var storage in storagesFilter)
+                {
+                    <option value="@storage.StorageId">@storage.Product.ProductName</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Cantidad: </label>
+            <InputNumber class="form-control" @bind-Value="inOut.Quantity" />
+        </div>
+
+        <br />
+
+        <div class="form-group">
+            <label class="form-label">¿Es entrada?</label>
+            <InputCheckbox @bind-Value="inOut.IsInput"/>
+        </div>
+
+        <br />
+
+        <div class="form-group">
+            <input type="button" value="@buttonValue" @onclick="CreateInOut" />
+        </div>
+    </EditForm>
+</div>
+
+<div class="form-group text-center">
+    <label class="form-label">@message</label>
+</div>
+
+@code {
+    InputOutputEntity inOut = new InputOutputEntity()
+    {
+        InOutId = Guid.NewGuid(),
+        InOutDate = DateTime.Now
+    };
+    List<StorageEntity> storages = new List<StorageEntity>();
+    List<StorageEntity> storagesFilter = new List<StorageEntity>();
+    List<WarehouseEntity> warehouses = new List<WarehouseEntity>();
+    string buttonValue => (inOut.IsInput) ? "Crear Entrada": "Crear Salida";
+    string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        warehouses = _warehouseBusiness.WarehouseList();
+        storages = _storageBusiness.StorageList();
+    }
+
+    private void GetStoragesByWarehouseId(ChangeEventArgs ev)
+    {
+        IEnumerable<StorageEntity> storagesByWarehouseId = from storage in storages
+                                                           where storage.WarehouseId == Guid.Parse(ev.Value.ToString())
+                                                           select storage;
+
+        storagesFilter = storagesByWarehouseId.ToList();
+    }
+
+    private void CreateInOut()
+    {
+        ProductEntity product = new ProductEntity();
+        StorageEntity storage = new StorageEntity();
+        storage = storagesFilter.LastOrDefault( p => p.StorageId == inOut.StorageId);
+
+        if (inOut.IsInput)
+        {
+            storage.PartialQuantity += inOut.Quantity;
+
+            product = storage.Product;
+            product.TotalQuantity += inOut.Quantity;
+
+            _productBusiness.UpdateProduct(product);
+            _storageBusiness.UpdateStorage(storage);
+            _inOutBusiness.CreateInOut(inOut);
+
+            message = $"La entrada del producto {product.ProductName} ha sido registrada exitosamente!";
+        }
+        else
+        {
+            if(isOutputValid(storage))
+            {
+                storage.PartialQuantity -= inOut.Quantity;
+
+                product = storage.Product;
+                product.TotalQuantity -= inOut.Quantity;
+
+                _productBusiness.UpdateProduct(product);
+                _storageBusiness.UpdateStorage(storage);
+                _inOutBusiness.CreateInOut(inOut);
+
+                message = $"La salida del producto {product.ProductName} ha sido registrada exitosamente!";
+            }
+            else
+            {
+                message = $"La cantidad deseada a retirar es mayor que la disponible!";
+            }
+        }
+    }
+
+    private bool isOutputValid(StorageEntity storage)
+    {
+        if (storage.PartialQuantity >= inOut.Quantity)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+}
