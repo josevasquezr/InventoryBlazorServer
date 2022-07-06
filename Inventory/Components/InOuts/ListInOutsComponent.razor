@@ -1,0 +1,52 @@
+﻿@using Entities
+@using Business
+@inject IInputOutputBusiness _inOutBusiness
+
+<hr />
+<div class="form-group">
+    <a href="inout/create">Crear Entrada/Salida</a>
+</div>
+<hr />
+
+<div>
+    <table class="table caption-top">
+        <caption>Lista de entradas y salidas</caption>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Bodega</th>
+                <th scope="col">Producto</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Cantidad total</th>
+                <th scope="col">Cantidad en bodega</th>
+                <th scope="col">Gestión</th>
+                <th scope="col">Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var inOut in inOuts)
+            {
+                <tr>
+                    <th scope="row">@(cantidad++)</th>
+                    <td>@inOut.Storage.Warehouse.WarehouseName</td>
+                    <td>@inOut.Storage.Product.ProductName</td>
+                    <td>@inOut.Quantity</td>
+                    <td>@inOut.Storage.Product.TotalQuantity</td>
+                    <td>@inOut.Storage.PartialQuantity</td>
+                    <td>@((inOut.IsInput) ? "Entrada" : "Salida")</td>
+                    <td>@inOut.InOutDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    List<InputOutputEntity> inOuts = new List<InputOutputEntity>();
+    int cantidad = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        inOuts = _inOutBusiness.InOutsList();
+    }
+}

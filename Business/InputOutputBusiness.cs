@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business
 {
@@ -25,7 +26,7 @@ namespace Business
 
         public InputOutputEntity InOutsById(Guid id)
         {
-            IEnumerable<InputOutputEntity> inOuts = from io in _context.InOuts
+            IEnumerable<InputOutputEntity> inOuts = from io in _context.InOuts.Include(p => p.Storage)
                                                     where io.InOutId == id
                                                     select io;
             return inOuts.FirstOrDefault();
@@ -33,7 +34,10 @@ namespace Business
 
         public List<InputOutputEntity> InOutsList()
         {
-            return _context.InOuts.ToList();
+            return _context.InOuts.Include( p => p.Storage)
+                                    .Include( p => p.Storage.Warehouse)
+                                    .Include( p => p.Storage.Product)
+                                    .ToList();
         }
 
         public void UpdateInOut(InputOutputEntity inOut)
