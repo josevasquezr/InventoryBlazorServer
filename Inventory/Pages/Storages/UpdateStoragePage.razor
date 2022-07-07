@@ -1,12 +1,12 @@
-﻿@page "/warehouse/update/{id}"
+﻿@page "/storage/update/{id}"
 
-<PageTitle>Editar bodega</PageTitle>
+<PageTitle>Editar almacenamiento</PageTitle>
 
 <hr />
-<h3>Editar bodega</h3>
+<h3>Editar almacenamiento</h3>
 <hr />
 
-<UpdateWarehouseComponent id="@(Guid.Parse(id))" />
+<UpdateStorageComponent id="@(Guid.Parse(id))" />
 
 @code {
     [Parameter]

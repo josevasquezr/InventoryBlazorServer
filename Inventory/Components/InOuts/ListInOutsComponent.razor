@@ -47,6 +47,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        inOuts = _inOutBusiness.InOutsList();
+        inOuts = _inOutBusiness.InOutsList()
+                                .OrderByDescending(p => p.InOutDate)
+                                .ToList();
     }
 }

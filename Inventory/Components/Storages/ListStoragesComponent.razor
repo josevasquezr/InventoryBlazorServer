@@ -16,6 +16,7 @@
                 <th scope="col">Bodega</th>
                 <th scope="col">Última actualización</th>
                 <th scope="col">Cantidad parcial</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +28,7 @@
                     <td>@storage.Warehouse.WarehouseName</td>
                     <td>@storage.LastUpdate</td>
                     <td>@storage.PartialQuantity</td>
+                    <td><a href="storage/update/@storage.StorageId">Editar</a></td>
                 </tr>
             }
         </tbody>
@@ -39,6 +41,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        storages = _storageBusiness.StorageList();
+        storages = _storageBusiness.StorageList()
+                                    .OrderByDescending( p => p.LastUpdate)
+                                    .ToList();
     }
 }
