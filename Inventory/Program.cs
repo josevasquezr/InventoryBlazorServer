@@ -1,7 +1,9 @@
 using Business;
 using DataAccess;
-using Inventory.Data;
+using Entities;
+using Entities.EntitiesValidations;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,9 @@ builder.Services.AddScoped<IInputOutputBusiness, InputOutputBusiness>();
 builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
 builder.Services.AddScoped<IStorageBusiness, StorageBusiness>();
 builder.Services.AddScoped<IWarehouseBusiness, WarehouseBusiness>();
+
+// Inyeccion de dependencias para validadores
+builder.Services.AddScoped<IValidator<CategoryEntity>, CategoryValidator>();
 
 var app = builder.Build();
 

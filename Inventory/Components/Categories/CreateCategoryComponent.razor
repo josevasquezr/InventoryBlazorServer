@@ -1,7 +1,10 @@
 ﻿@using Entities
 @using Business
+@using FluentValidation
+@using FluentValidation.Results
 @inject ICategoryBusiness _categoryBusiness
 @inject NavigationManager _navManager
+@inject IValidator<CategoryEntity> _categoryValidator
 
 <div>
     <EditForm Model="category">
@@ -11,9 +14,18 @@
         </div>
 
         <br />
-        
-        <input type="button" value="Crear categoria" @onclick="CreateCategory"/>
+
+        <input type="button" value="Crear categoria" @onclick="CreateCategory" />
     </EditForm>
+</div>
+
+<br />
+
+<div class="form-group">
+    @foreach (var error in errors)
+    {
+        <div class="alert-danger text-center">@error.ErrorMessage</div>
+    }
 </div>
 
 @code {
@@ -22,9 +34,20 @@
         CategoryId = Guid.NewGuid()
     };
 
+    List<ValidationFailure> errors = new List<ValidationFailure>();
+
     private void CreateCategory()
     {
-        _categoryBusiness.CreateCategory(category);
-        _navManager.NavigateTo("category/list");
+        ValidationResult validationResult = _categoryValidator.Validate(category);
+
+        if (validationResult.IsValid)
+        {
+            _categoryBusiness.CreateCategory(category);
+            _navManager.NavigateTo("category/list");
+        }
+        else
+        {
+            errors = validationResult.Errors;
+        }
     }
 }
