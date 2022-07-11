@@ -48,7 +48,7 @@ namespace Entities.EntitiesValidations
     {
         public ProductDescriptionIsSpecified()
         {
-            RuleFor(product => product.ProductDescription).Length(600).WithMessage("La descripción no debe tener más de 600 caracteres.");
+            RuleFor(product => product.ProductDescription).Length(0, 600).WithMessage("La descripción no debe tener más de 600 caracteres.");
         }
     }
 
@@ -65,8 +65,7 @@ namespace Entities.EntitiesValidations
     {
         public TotalQuantityIsEspecified()
         {
-            RuleFor(product => product.TotalQuantity).NotEmpty().WithMessage("La cantidad no debe ser vacío.")
-                                                        .NotNull().WithMessage("La cantidad no debe ser nulo.");
+            RuleFor(product => product.TotalQuantity).NotNull().WithMessage("La cantidad no debe ser nulo.");
         }
     }
 

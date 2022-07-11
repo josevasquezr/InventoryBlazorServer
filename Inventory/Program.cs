@@ -23,6 +23,7 @@ builder.Services.AddScoped<IWarehouseBusiness, WarehouseBusiness>();
 
 // Inyeccion de dependencias para validadores
 builder.Services.AddScoped<IValidator<CategoryEntity>, CategoryValidator>();
+builder.Services.AddScoped<IValidator<ProductEntity>, ProductValidator>();
 
 var app = builder.Build();
 

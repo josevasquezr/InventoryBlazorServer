@@ -1,0 +1,14 @@
+﻿@using FluentValidation
+@using FluentValidation.Results
+
+<div class="form-group">
+    @foreach (var error in errors)
+    {
+        <div class="alert-danger text-center">@error.ErrorMessage</div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<ValidationFailure> errors { get; set; }
+}

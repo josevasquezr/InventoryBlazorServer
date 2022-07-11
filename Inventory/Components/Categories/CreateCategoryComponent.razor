@@ -21,12 +21,7 @@
 
 <br />
 
-<div class="form-group">
-    @foreach (var error in errors)
-    {
-        <div class="alert-danger text-center">@error.ErrorMessage</div>
-    }
-</div>
+<ErrorsValidations errors=@errors />
 
 @code {
     CategoryEntity category = new CategoryEntity()
