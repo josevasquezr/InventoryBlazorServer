@@ -1,5 +1,8 @@
 ﻿@using Entities
 @using Business
+@using FluentValidation
+@using FluentValidation.Results
+@inject IValidator<CategoryEntity> _categoryValidator
 @inject ICategoryBusiness _categoryBusiness
 @inject NavigationManager _navManager
 
@@ -16,16 +19,28 @@
     </EditForm>
 </div>
 
+<ErrorsValidations errors=@errors />
+
 @code {
     [Parameter]
     public Guid id { get; set;  }
 
     CategoryEntity category = new CategoryEntity();
+    List<ValidationFailure> errors = new List<ValidationFailure>();
 
     private void UpdateCategory()
     {
-        _categoryBusiness.UpdateCategory(category);
-        _navManager.NavigateTo("category/list");
+        ValidationResult validationResult = _categoryValidator.Validate(category);
+
+        if(validationResult.IsValid)
+        {
+            _categoryBusiness.UpdateCategory(category);
+            _navManager.NavigateTo("category/list");
+        }
+        else
+        {
+            errors = validationResult.Errors;
+        }
     }
 
     protected override async Task OnInitializedAsync()
