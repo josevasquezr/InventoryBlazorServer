@@ -31,7 +31,7 @@ namespace Entities.EntitiesValidations
         {
             RuleFor(product => product.ProductName).NotEmpty().WithMessage("El nombre no debe ser vacío.")
                                                     .NotNull().WithMessage("El nombre no debe ser nulo.")
-                                                    .Length(4, 100).WithMessage("El nombre debe tener entre entre 4 y 100 caracteres.");
+                                                    .Length(4, 100).WithMessage("El nombre debe tener entre 4 y 100 caracteres.");
         }
     }
 
