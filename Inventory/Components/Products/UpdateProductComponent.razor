@@ -1,8 +1,11 @@
 ﻿@using Entities
 @using Business
+@using FluentValidation
+@using FluentValidation.Results
 @inject IProductBusiness _productBusiness
 @inject ICategoryBusiness _categoryBusiness
 @inject NavigationManager _navManager
+@inject IValidator<ProductEntity> _validatorProduct 
 
 <div>
     <EditForm Model="product">
@@ -32,12 +35,15 @@
     </EditForm>
 </div>
 
+<ErrorsValidations errors="@errors" />
+
 @code {
     [Parameter]
     public Guid id { get; set; }
 
     ProductEntity product = new ProductEntity();
     List<CategoryEntity> categories = new List<CategoryEntity>();
+    List<ValidationFailure> errors = new List<ValidationFailure>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,7 +53,16 @@
 
     private void UpdateProduct()
     {
-        _productBusiness.UpdateProduct(product);
-        _navManager.NavigateTo("product/list");
+        ValidationResult resultValidationProduct = _validatorProduct.Validate(product);
+
+        if (resultValidationProduct.IsValid)
+        {
+            _productBusiness.UpdateProduct(product);
+            _navManager.NavigateTo("product/list");
+        }
+        else
+        {
+            errors = resultValidationProduct.Errors;
+        }
     }
 }
