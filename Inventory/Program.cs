@@ -25,6 +25,7 @@ builder.Services.AddScoped<IWarehouseBusiness, WarehouseBusiness>();
 builder.Services.AddScoped<IValidator<CategoryEntity>, CategoryValidator>();
 builder.Services.AddScoped<IValidator<ProductEntity>, ProductValidator>();
 builder.Services.AddScoped<IValidator<WarehouseEntity>, WarehouseValidator>();
+builder.Services.AddScoped<IValidator<StorageEntity>, StorageValidator>();
 
 var app = builder.Build();
 
