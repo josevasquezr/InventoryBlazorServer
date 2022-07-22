@@ -26,6 +26,7 @@ builder.Services.AddScoped<IValidator<CategoryEntity>, CategoryValidator>();
 builder.Services.AddScoped<IValidator<ProductEntity>, ProductValidator>();
 builder.Services.AddScoped<IValidator<WarehouseEntity>, WarehouseValidator>();
 builder.Services.AddScoped<IValidator<StorageEntity>, StorageValidator>();
+builder.Services.AddScoped<IValidator<InputOutputEntity>, InputOutputValidator>();
 
 var app = builder.Build();
 
