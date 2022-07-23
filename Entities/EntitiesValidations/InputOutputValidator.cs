@@ -7,11 +7,11 @@ namespace Entities.EntitiesValidations
         public InputOutputValidator()
         {
             RuleFor(inOut => inOut.InOutId).NotNull().NotEmpty();
-            RuleFor(inOut => inOut.StorageId).NotNull().NotEmpty();
+            RuleFor(inOut => inOut.StorageId).NotNull().WithMessage("Debe seleccionar un almacenamiento.")
+                                                .NotEmpty().WithMessage("Debe seleccionar un almacenamiento.");
             Include(new InOutDateIsSpecified());
             Include(new InOutQuatityIsSpecified());
-            Include(new InOutQuantityIsBiggerOrEqualThanZero());
-            Include(new InOutIsInputIsSpecified());
+            Include(new InOutQuantityIsBiggerThanZero());
         }
 
         public class InOutDateIsSpecified : AbstractValidator<InputOutputEntity>
@@ -32,26 +32,17 @@ namespace Entities.EntitiesValidations
             }
         }
 
-        public class InOutQuantityIsBiggerOrEqualThanZero : AbstractValidator<InputOutputEntity>
+        public class InOutQuantityIsBiggerThanZero : AbstractValidator<InputOutputEntity>
         {
-            public InOutQuantityIsBiggerOrEqualThanZero()
+            public InOutQuantityIsBiggerThanZero()
             {
-                RuleFor(inOut => inOut.Quantity).Must(IsBiggerOrEqualThanZero)
-                                                .WithMessage("La cantidad debe ser mayor o igual a cero.");
+                RuleFor(inOut => inOut.Quantity).Must(IsBiggerThanZero)
+                                                .WithMessage("La cantidad debe ser mayor a cero.");
             }
 
-            private bool IsBiggerOrEqualThanZero(int quantity)
+            private bool IsBiggerThanZero(int quantity)
             {
-                return quantity >= 0;
-            }
-        }
-
-        public class InOutIsInputIsSpecified : AbstractValidator<InputOutputEntity>
-        {
-            public InOutIsInputIsSpecified()
-            {
-                RuleFor(inOut => inOut.IsInput).NotNull().WithMessage("La entrada o salida no debe ser nula.")
-                                                .NotEmpty().WithMessage("Especifique si es entrada o salida.");
+                return quantity > 0;
             }
         }
     }
