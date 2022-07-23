@@ -1,7 +1,10 @@
 ﻿@using Entities
 @using Business
+@using FluentValidation
+@using FluentValidation.Results
 @inject IWarehouseBusiness _warehouseBusiness
 @inject NavigationManager _navManager
+@inject IValidator<WarehouseEntity> _warehouseValidator
 
 <div>
     <EditForm Model="warehouse">
@@ -20,16 +23,29 @@
     </EditForm>
 </div>
 
+<ErrorsValidations errors="@errors" />
+
 @code {
     WarehouseEntity warehouse = new WarehouseEntity()
     {
         WarehouseId = Guid.NewGuid()
     };
 
+    List<ValidationFailure> errors = new List<ValidationFailure>();
+
     private void CreateWarehouse()
     {
-        _warehouseBusiness.CreateWarehouse(warehouse);
-        _navManager.NavigateTo("warehouse/list");
+        ValidationResult resultValidation = _warehouseValidator.Validate(warehouse);
+
+        if(resultValidation.IsValid)
+        {
+            _warehouseBusiness.CreateWarehouse(warehouse);
+            _navManager.NavigateTo("warehouse/list");
+        }
+        else
+        {
+            errors = resultValidation.Errors;
+        }
     }
 
 }

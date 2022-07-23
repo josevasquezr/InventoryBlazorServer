@@ -7,8 +7,10 @@ namespace Entities.EntitiesValidations
         public StorageValidator()
         {
             RuleFor(storage => storage.StorageId).NotNull().NotEmpty();
-            RuleFor(storage => storage.ProductId).NotNull().NotEmpty();
-            RuleFor(storage => storage.WarehouseId).NotNull().NotEmpty();
+            RuleFor(storage => storage.ProductId).NotNull().WithMessage("Debe seleccionar un producto.")
+                                                    .NotEmpty().WithMessage("Debe seleccionar un producto.");
+            RuleFor(storage => storage.WarehouseId).NotNull().WithMessage("Debe seleccionar una bodega.")
+                                                    .NotEmpty().WithMessage("Debe seleccionar una bodega.");
             Include(new LastUpdateIsSpecified());
             Include(new PartialQuantityIsSpecified());
             Include(new PartialQuantityIsBiggerOrEqualThanZero());
@@ -28,8 +30,7 @@ namespace Entities.EntitiesValidations
     {
         public PartialQuantityIsSpecified()
         {
-            RuleFor(storage => storage.PartialQuantity).NotNull().WithMessage("La cantidad parcial no debe ser nula.")
-                                                    .NotEmpty().WithMessage("La cantidad parcial no debe ser vacia.");
+            RuleFor(storage => storage.PartialQuantity).NotNull().WithMessage("La cantidad parcial no debe ser nula.");
         }
     }
 

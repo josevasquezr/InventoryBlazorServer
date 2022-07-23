@@ -1,9 +1,12 @@
 ﻿@using Entities
 @using Business
+@using FluentValidation
+@using FluentValidation.Results
 @inject IStorageBusiness _storageBusiness
 @inject IProductBusiness _productBusiness
 @inject IWarehouseBusiness _warehouseBusiness
 @inject NavigationManager _navManager
+@inject IValidator<StorageEntity> _storageValidator
 
 <div>
     <EditForm Model="storage">
@@ -32,11 +35,7 @@
     </EditForm>
 </div>
 
-<br />
-
-<div>
-    <span class="text-center alert-info">@message</span>
-</div>
+<ErrorsValidations errors="@errors" />
 
 @code {
     [Parameter]
@@ -46,7 +45,7 @@
 
     List<ProductEntity> products = new List<ProductEntity>();
     List<WarehouseEntity> warehouses = new List<WarehouseEntity>();
-    string message = "";
+    List<ValidationFailure> errors = new List<ValidationFailure>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,23 +56,25 @@
 
     private void UpdateStorage()
     {
-        if (validate())
+        ValidationResult validationResult = _storageValidator.Validate(storage);
+
+        if (validationResult.IsValid)
         {
             if (!_storageBusiness.IsStorageExist(storage.ProductId, storage.WarehouseId))
             {
                 storage.LastUpdate = DateTime.Now;
                 _storageBusiness.UpdateStorage(storage);
-                message = "Almacenamiento editado exitosamente!";
                 _navManager.NavigateTo("storage/list");
             }
             else
             {
-                message = "El almacenamiento ya existe!";
+                errors.Clear();
+                errors.Add(new ValidationFailure("", "El almacenamiento ya existe!"));
             }
         }
         else
         {
-            message = "Seleccione el producto y la bodega!";
+            errors = validationResult.Errors;
         }
     }
 
